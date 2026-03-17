@@ -33,6 +33,22 @@ export class OpenClawClient {
       this.ws.onopen = () => {
         console.log('Connected to OpenClaw Gateway');
         this.reconnectAttempts = 0;
+
+        // Send connect handshake with token
+        const connectMessage = {
+          type: 'connect',
+          params: {
+            auth: {
+              token: this.config.token,
+            },
+            device: {
+              id: 'clawmate-' + Math.random().toString(36).substr(2, 9),
+            },
+            role: 'client',
+          },
+        };
+        this.ws?.send(JSON.stringify(connectMessage));
+
         resolve();
       };
 
